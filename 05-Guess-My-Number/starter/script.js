@@ -14,7 +14,7 @@ const message = document.querySelector(".message")
 let adivinalo = Math.trunc((Math.random() * 100)+1);
 console.log(adivinalo)
 let vidas = 5;
-let score = 100
+let score = 1000
 vidasUsuario.textContent = `${vidas}`;
 scoreUsuario.textContent = `${score}`;
 
@@ -23,13 +23,20 @@ scoreUsuario.textContent = `${score}`;
 btnCheck.addEventListener(
     "click",
     ()=> {
-        if(inputNumber.value <1 || inputNumber.value >100)
+        if (inputNumber.value == adivinalo)
+        {endGame(); victoria(); highscoreUser();} 
+
+        else if(inputNumber.value <1 || inputNumber.value >100)
         {invalidNumber()} 
-        else if(vidas  == 1  && adivinalo != inputNumber.value)
-        {loseGame(); highscoreUser()} 
-        else if (inputNumber.value == adivinalo)
-        {victoria(); highscoreUser()} 
-        else{ fallaste()}
+
+        else if(vidas  == 1  && adivinalo !== inputNumber.value)
+         { fallaste(); endGame(); loseGame(); highscoreUser()} 
+
+        else{
+            fallaste();
+            inputNumber.value > adivinalo ? message.innerHTML = "Te has pasado" : message.innerHTML = "Te has quedado corto";     
+        }
+        
     }
 );
 
@@ -48,48 +55,38 @@ const randomNumero = () => {
 const invalidNumber = () => {
     message.textContent = "El número introducido no es válido"
 }
-const loseGame = () => {
-    scoreUsuario.textContent = `${score}`
-    body.classList.add("derrota");
-    vidas--;
-    vidasUsuario.textContent = `${vidas}`
-    message.innerHTML = `Has perdido!`;
+const endGame = () => {
+    score = (200 / 5) * (`${vidas}` **2);
     scoreUsuario.textContent = `${score}`
     btnCheck.disabled = true;
     outputNumber.textContent = `${adivinalo}`;
+}
+const loseGame = () => {
+    body.classList.add("derrota");
+    message.innerHTML = `Has perdido!`;
 }
 const victoria = () => {
-    scoreUsuario.textContent = `${score}`
     body.classList.add("victoria")
     message.textContent = "Has ganado!";
-    scoreUsuario.textContent = `${score}`
-    btnCheck.disabled = true;
-    outputNumber.textContent = `${adivinalo}`;
+    inputNumber.value = null; 
 }
+
 const fallaste = () => {
-    if( inputNumber.value > adivinalo){
         vidas--
-        message.innerHTML = "Te has pasado";
+        inputNumber.value = null;
         vidasUsuario.textContent =  `${vidas}`;
-        score = (100 * `${vidas}`) / 5;
+        score = (200 / 5) * (`${vidas}` **2)
+        scoreUsuario.textContent = `${score}`
     }
-    else if(inputNumber.value < adivinalo){
-        vidas--
-        message.innerHTML = "Te has quedado corto";
-        vidasUsuario.textContent =  `${vidas}`;
-        score = (100 * `${vidas}`) / 5;
-    }
-}
+
 const resetGame = () => {
     vidas = 5;
-    inputNumber.value = null;
     vidasUsuario.textContent = `${vidas}`;
     body.classList.remove("victoria", "derrota");
     outputNumber.textContent = "?"
     btnCheck.disabled = false;
-    adivinalo = Math.trunc((Math.random() * 20)+1)
-    console.log(adivinalo)
-    
+    adivinalo = Math.trunc((Math.random() * 100)+1)
+    console.log(adivinalo) 
 }
 
 let mejorMarca = 0;
