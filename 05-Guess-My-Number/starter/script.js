@@ -20,23 +20,52 @@ scoreUsuario.textContent = `${score}`;
 
 // Clicks usuario
 
-btnCheck.addEventListener(
-    "click",
-    ()=> {
+document.addEventListener("keydown",
+(e)=> {
+    if(e.key === "Enter"){
         if (inputNumber.value == adivinalo)
-        {endGame(); victoria(); highscoreUser();} 
+        {endGame(); victoria(); highscoreUser();
+            } 
 
         else if(inputNumber.value <1 || inputNumber.value >100)
         {invalidNumber()} 
 
         else if(vidas  == 1  && adivinalo !== inputNumber.value)
          { fallaste(); endGame(); loseGame(); highscoreUser()} 
-
-        else{
-            fallaste();
-            inputNumber.value > adivinalo ? message.innerHTML = "Te has pasado" : message.innerHTML = "Te has quedado corto";     
+         else{
+            if(inputNumber.value > adivinalo){
+                message.innerHTML = "Te has pasado";
+                fallaste();    
+            } else{
+                message.innerHTML = "Te has quedado corto";
+                fallaste()
+            }
         }
-        
+    }
+})
+
+
+btnCheck.addEventListener(
+    "click",
+    ()=> {
+        if (inputNumber.value == adivinalo)
+        {endGame(); victoria(); highscoreUser();
+            } 
+
+        else if(inputNumber.value <1 || inputNumber.value >100)
+        {invalidNumber()} 
+
+        else if(vidas  == 1  && adivinalo !== inputNumber.value)
+         { fallaste(); endGame(); loseGame(); highscoreUser()} 
+         else{
+            if(inputNumber.value > adivinalo){
+                message.innerHTML = "Te has pasado";
+                fallaste();    
+            } else{
+                message.innerHTML = "Te has quedado corto";
+                fallaste()
+            }
+        }
     }
 );
 
@@ -79,10 +108,16 @@ const fallaste = () => {
         scoreUsuario.textContent = `${score}`
     }
 
+const mayorMenor = () => {
+    if(inputNumber.value > adivinalo){ message.innerHTML = "Te has pasado"} else{ message.innerHTML = "Te has quedado corto"} 
+}
+
 const resetGame = () => {
     vidas = 5;
     vidasUsuario.textContent = `${vidas}`;
     body.classList.remove("victoria", "derrota");
+    scoreUsuario.textContent = "1000";
+    score = 1000;
     outputNumber.textContent = "?"
     btnCheck.disabled = false;
     adivinalo = Math.trunc((Math.random() * 100)+1)
